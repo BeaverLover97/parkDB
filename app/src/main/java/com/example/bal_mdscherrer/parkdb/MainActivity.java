@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.io.IOException;
 import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
@@ -21,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     private MyDBHandler db = new MyDBHandler(this,null,null,1);
     private  Context context;
     private ParkJson parks = new ParkJson();
+    private String Json;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,16 +31,22 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        parks.loadJSONFromAsset(context);
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+        Json = parks.loadJSONFromAsset(context);
+        Log.d("data", "onCreate: Json : " + Json);
+        AssetManager mngr = getAssets();
+        try {
+            Log.d("data", "onCreate: AssetsFolder contents : " + mngr.list("C:\\Users\\bal_mdscherrer\\AndroidStudioProjects\\parkDB\\app\\src\\main\\assets").length);
+        } catch (IOException e) {
+            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
 
-            }
-        });
+                }
+            });
+        }
     }
 
     @Override
@@ -78,17 +86,5 @@ return true;
     }
 
 
-    public class MyApp extends Application {
 
-        private  Context sContext;
-        @Override
-        public void onCreate() {
-            sContext = getApplicationContext();
-            super.onCreate();
-        }
-
-        public  Context getContext() {
-            return sContext;
-        }
-    }
 }

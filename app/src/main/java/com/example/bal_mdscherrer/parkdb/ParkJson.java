@@ -1,5 +1,5 @@
 package com.example.bal_mdscherrer.parkdb;
-
+//http://stackoverflow.com/questions/13814503/reading-a-json-file-in-android
 import android.app.Application;
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -22,10 +22,10 @@ public class ParkJson {
     private Context context;
 
     public String loadJSONFromAsset(Context context) {
-        String json = null;
+        String json;
         this.context = context;
         try {
-            InputStream is = context.getAssets().open("park_data.json");
+            InputStream is = context.getAssets().open("park_data.Json");
             int size = is.available();
             byte[] buffer = new byte[size];
             is.read(buffer);
@@ -38,7 +38,7 @@ public class ParkJson {
         return json;
     }
 
-    public ArrayList<String> getJsonFromAsset(String Json) {
+    public ArrayList<String> getJsonFromAsset() {
         ArrayList<String> formList = new ArrayList<String>();
         try {
             JSONObject obj = new JSONObject(loadJSONFromAsset(context));
@@ -48,6 +48,7 @@ public class ParkJson {
             for (int i = 0; i < m_jArry.length(); i++) {
                 JSONObject jo_inside = m_jArry.getJSONObject(i);
                 parkData = jo_inside.getString("data");
+                Log.d("Data", "Park Data:  " + parkData);
                 formList.add(parkData);
             }
 
