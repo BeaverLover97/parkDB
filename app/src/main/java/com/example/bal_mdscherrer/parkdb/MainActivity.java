@@ -14,7 +14,11 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
@@ -34,9 +38,13 @@ public class MainActivity extends AppCompatActivity {
         Json = parks.loadJSONFromAsset(context);
         Log.d("data", "onCreate: Json : " + Json);
         AssetManager mngr = getAssets();
+        JSONObject jo = null;
         try {
-            Log.d("data", "onCreate: AssetsFolder contents : " + mngr.list("C:\\Users\\bal_mdscherrer\\AndroidStudioProjects\\parkDB\\app\\src\\main\\assets").length);
-        } catch (IOException e) {
+             jo = new JSONObject(loadJSONFromAsset());
+            Log.d("data", "Json Object " + jo.optString("data",null));
+        }catch(JSONException e){
+
+        }
             FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -47,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
-    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -84,7 +92,30 @@ return true;
 
 
     }
+    public String loadJSONFromAsset() {
+        String json = null;
+        try {
 
+            InputStream is = getAssets().open("park_data.Json");
+
+            int size = is.available();
+
+            byte[] buffer = new byte[size];
+
+            is.read(buffer);
+
+            is.close();
+
+            json = new String(buffer, "UTF-8");
+
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return json;
+
+    }
 
 
 }
